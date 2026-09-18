@@ -542,6 +542,7 @@ def configure_calendar_tools(mcp: MCPServer):
         location: str = "",
         description: str = "",
         reminder_minutes: int = 15,
+        timezone: str = "",
     ):
         """Quick meeting creation with smart defaults
 
@@ -565,6 +566,10 @@ def configure_calendar_tools(mcp: MCPServer):
             location: Meeting location
             description: Meeting description/agenda
             reminder_minutes: Minutes before meeting to send reminder (default: 15)
+            timezone: Optional IANA timezone name (e.g. ``"Europe/Berlin"``). The
+                ``date``/``time`` inputs are always naive, so this is what binds the
+                meeting to a zone. Without it the event is stored as RFC 5545
+                floating time and shifts for viewers in other zones.
 
         Returns:
             Dict with meeting creation result
@@ -591,6 +596,7 @@ def configure_calendar_tools(mcp: MCPServer):
             "status": "CONFIRMED",
             "priority": 5,
             "privacy": "PUBLIC",
+            "timezone": timezone,
         }
 
         return await client.calendar.create_event(calendar_name, event_data)
